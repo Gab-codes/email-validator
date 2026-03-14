@@ -15,17 +15,42 @@ if not sys.version_info[0] > 2 and not sys.version_info[1] > 8:
 	exit('\033[0;31mpython 3.9 is required. try to run this script with \033[1mpython3\033[0;31m instead of \033[1mpython\033[0m')
 
 custom_dns_nameservers = '1.1.1.2,1.0.0.2,208.67.222.222,208.67.220.220,1.1.1.1,1.0.0.1,8.8.8.8,8.8.4.4,9.9.9.9,149.112.112.112,185.228.168.9,185.228.169.9,76.76.19.19,76.223.122.150,94.140.14.14,94.140.15.15,84.200.69.80,84.200.70.40,8.26.56.26,8.20.247.20,205.171.3.65,205.171.2.65,195.46.39.39,195.46.39.40,159.89.120.99,134.195.4.2,216.146.35.35,216.146.36.36,45.33.97.5,37.235.1.177,77.88.8.8,77.88.8.1,91.239.100.100,89.233.43.71,80.80.80.80,80.80.81.81,74.82.42.42,,64.6.64.6,64.6.65.6,45.77.165.194,45.32.36.36'.split(',')
-# dns_list_url = 'https://public-dns.info/nameservers.txt'
-dns_list_url = 'https://raw.githubusercontent.com/janmasarik/resolvers/master/resolvers.txt'
+dns_trusted_url = 'https://raw.githubusercontent.com/trickest/resolvers/main/resolvers-trusted.txt'
+dns_list_url = 'https://raw.githubusercontent.com/trickest/resolvers/main/resolvers.txt'
 ip2location_url = 'https://github.com/aels/mailtools/releases/download/ip2location/ip2location.bin'
 ip2location_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ip2location.bin')
 whitelisted_mx  = r'(google\.com|outlook\.com|googlemail\.com|qq\.com|improvmx\.com|registrar-servers\.com|emailsrvr\.com|secureserver\.net|yandex\.net|amazonaws\.com|zoho\.com|messagingengine\.com|mailgun\.org|netease\.com|yandex\.ru|ovh\.net|gandi\.net|zoho\.eu|mxhichina\.com|mail\.ru|sbnation\.com|beget\.com|securemx\.jp|hostedemail\.com|arsmtp\.com|yahoodns\.net|protonmail\.ch|pair\.com|ne\.jp|1and1\.com|ispgateway\.de|dreamhost\.com|amazon\.com|dfn\.de|aliyun\.com|163\.com|mailanyone\.net|suremail\.cn|privateemail\.com|one\.com|espmailservice\.net|nic\.in|kasserver\.com|oxcs\.net|everyone\.net|above\.com|timeweb\.ru|serverdata\.net|forwardemail\.net|bund\.de|mailhostbox\.com|kundenserver\.de|ionos\.com|expedia\.com|icoremail\.net|hostedmxserver\.com|263xmail\.com|infomaniak\.ch|hostinger\.com|automattic\.com|alibaba-inc\.com|feishu\.cn|cnhi\.com|h-email\.net|zohomail\.com|outlook\.cn|easydns\.com|cscdns\.net|zoho\.in|name\.com|migadu\.com|mailbox\.org|untd\.com|stackmail\.com|kagoya\.net|forwardmx\.io|carrierzone\.com|ucoz\.net|renr\.es|redhat\.com|hotmail\.com|hostinger\.in|fusemail\.net|disney\.com|bell\.ca)$'
 dangerous_users = r'^hr$|about|abuse|admin|apps|calendar|catch|community|confirm|contracts|customer|daemon|director|excel|fax|feedback|found|hello|help|home|invite|job|mail|manager|marketing|newsletter|office|orders|postmaster|regist|reply|report|sales|scanner|security|service|staff|submission|survey|tech|test|twitter|verification|webmaster'
 dangerous_zones = r'\.(gov|mil|edu)(\.[a-z.]+|$)'
-dangerous_isps  = r'acronis|acros|adlice|alinto|appriver|aspav|atomdata|avanan|avast|barracuda|baseq|bitdefender|broadcom|btitalia|censornet|checkpoint|cisco|cistymail|clean-mailbox|clearswift|closedport|cloudflare|comforte|corvid|crsp|cyren|darktrace|data-mail-group|dmarcly|drweb|duocircle|e-purifier|earthlink-vadesecure|ecsc|eicar|elivescanned|emailsorting|eset|essentials|exchangedefender|fireeye|forcepoint|fortinet|gartner|gatefy|gonkar|group-ib|guard|helpsystems|heluna|hosted-247|iberlayer|indevis|infowatch|intermedia|intra2net|invalid|ioactive|ironscales|isync|itserver|jellyfish|kcsfa.co|keycaptcha|krvtz|libraesva|link11|localhost|logix|mailborder.co|mailchannels|mailcleaner|mailcontrol|mailinator|mailroute|mailsift|mailstrainer|mcafee|mdaemon|mimecast|mx-relay|mx1.ik2|mx37\.m..p\.com|mxcomet|mxgate|mxstorm|n-able|n2net|nano-av|netintelligence|network-box|networkboxusa|newnettechnologies|newtonit.co|odysseycs|openwall|opswat|perfectmail|perimeterwatch|plesk|prodaft|proofpoint|proxmox|redcondor|reflexion|retarus|safedns|safeweb|sec-provider|secureage|securence|security|sendio|shield|sicontact|smxemail|sonicwall|sophos|spamtitan|spfbl|spiceworks|stopsign|supercleanmail|techtarget|titanhq|trellix|trendmicro|trustifi|trustwave|tryton|uni-muenster|usergate|vadesecure|wessexnetworks|zillya|zyxel'
+dangerous_isps  = r'acronis|acros|adlice|alinto|appriver|aspav|atomdata|avanan|avast|barracuda|baseq|bitdefender|broadcom|btitalia|censornet|checkpoint|cisco|cistymail|clean-mailbox|clearswift|closedport|cloudflare|comforte|corvid|crsp|cyren|darktrace|data-mail-group|dmarcly|drweb|duocircle|e-purifier|earthlink-vadesecure|ecsc|eicar|elivescanned|emailsorting|eset|essentials|exchangedefender|fireeye|forcepoint|fortinet|gartner|gatefy|gonkar|group-ib|guard|helpsystems|heluna|hosted-247|iberlayer|indevis|infowatch|intermedia|intra2net|invalid|ioactive|ironscales|isync|itserver|jellyfish|kcsfa.co|keycaptcha|krvtz|libraesva|link11|localhost|logix|mailborder.co|mailchannels|mailcleaner|mailcontrol|mailinator|mailroute|mailsift|mailstrainer|mcafee|mdaemon|mx-relay|mx1.ik2|mx37\.m..p\.com|mxcomet|mxgate|mxstorm|n-able|n2net|nano-av|netintelligence|network-box|networkboxusa|newnettechnologies|newtonit.co|odysseycs|openwall|opswat|perfectmail|perimeterwatch|plesk|prodaft|proofpoint|proxmox|redcondor|reflexion|retarus|safedns|safeweb|sec-provider|secureage|securence|security|sendio|shield|sicontact|smxemail|sonicwall|sophos|spamtitan|spfbl|spiceworks|stopsign|supercleanmail|techtarget|titanhq|trellix|trendmicro|trustifi|trustwave|tryton|uni-muenster|usergate|vadesecure|wessexnetworks|zillya|zyxel'
 dangerous_isps2 = r'abus|bad|black|bot|brukalai|excello|filter|honey|junk|lab|list|metunet|rbl|research|security|spam|trap|ubl|virtual|virus|vm\d'
 dangerous_title = r'<title>[^<]*(security|spam|filter|antivirus)[^<]*<'
 disposable_domains = r'mailinator\.com|guerrillamail\.com|tempmail\.com|throwam\.com|yopmail\.com|sharklasers\.com|disposable\.com|10minutemail\.com|getairmail\.com'
+consumer_domains = {
+	# Google
+	'gmail.com', 'googlemail.com',
+	# Microsoft
+	'outlook.com', 'hotmail.com', 'hotmail.co.uk', 'hotmail.fr',
+	'live.com', 'live.co.uk', 'msn.com', 'passport.com',
+	# Yahoo
+	'yahoo.com', 'yahoo.co.uk', 'yahoo.fr', 'yahoo.es',
+	'yahoo.de', 'yahoo.it', 'yahoo.com.br', 'yahoo.co.jp',
+	'ymail.com',
+	# Yandex
+	'yandex.com', 'yandex.ru', 'ya.ru',
+	# Apple
+	'icloud.com', 'me.com', 'mac.com',
+	# AOL
+	'aol.com', 'aim.com',
+	# ProtonMail
+	'protonmail.com', 'proton.me', 'pm.me',
+	# Zoho personal
+	'zoho.com', 'zohomail.com',
+	# Others
+	'mail.com', 'email.com', 'gmx.com', 'gmx.net',
+	'imap.com', 'inbox.com', 'fastmail.com', 'hushmail.com',
+	'tutanota.com', 'tutamail.com', 'rediffmail.com',
+}
 
 stats = {
 	'total': 0,
@@ -39,11 +64,13 @@ stats = {
 	'reasons': collections.Counter()
 }
 categorization_lock = threading.Lock()
+nameserver_failures = collections.Counter()
 
 resolver_obj = dns.resolver.Resolver()
 resolver_obj.rotate = True
-resolver_obj.timeout = 5
-resolver_obj.lifetime = 5
+resolver_obj.timeout = 2
+resolver_obj.lifetime = 2
+resolver_obj.cache = dns.resolver.LRUCache()
 requests.packages.urllib3.disable_warnings()
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -127,12 +154,18 @@ def check_database_exists():
 	print(wl+okk+'ip2location.bin path:          '+ip2location_path)
 
 def load_dns_servers():
-	global custom_dns_nameservers, dns_list_url
+	global custom_dns_nameservers, dns_trusted_url
+	start_time = time.time()
 	try:
-		custom_dns_nameservers = requests.get(dns_list_url, timeout=5).text.splitlines()
-	except Exception as e:
-		print(err+'failed to load additional DNS servers. '+str(e))
-		print(err+'performance will be affected.')
+		# Only use Trusted Resolvers (much higher quality, lower timeout risk)
+		r = requests.get(dns_trusted_url, timeout=5)
+		if r.status_code == 200:
+			ips = [ip.strip() for ip in r.text.splitlines() if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip.strip())]
+			if ips:
+				custom_dns_nameservers = list(set(ips))
+	except:
+		pass
+	print(okk+f'DNS pool loaded in {time.time()-start_time:.2f}s. Total nameservers: {num(len(custom_dns_nameservers))}')
 
 def first(a):
 	return (a or [''])[0]
@@ -144,8 +177,15 @@ def sec_to_min(i):
 	return '%02d:%02d'%(int(i/60), i%60)
 
 def get_url_body(host):
+	user_agents = [
+		'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+		'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+		'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+		'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
+	]
+	headers = {'User-Agent': random.choice(user_agents)}
 	try:
-		return requests.get('https://'+host, timeout=3, verify=False).text
+		return requests.get('https://'+host, timeout=3, verify=False, headers=headers).text
 	except:
 		return ''
 
@@ -154,8 +194,17 @@ def get_top_host(host):
 	return '.'.join(host_arr[-3 if len(host_arr[-2])<4 else -2:])
 
 def switch_dns_nameserver():
-	global resolver_obj, custom_dns_nameservers
-	resolver_obj.nameservers = [random.choice(custom_dns_nameservers)]
+	global resolver_obj, custom_dns_nameservers, nameserver_failures
+	try:
+		current_ns = resolver_obj.nameservers[0]
+		nameserver_failures[current_ns] += 1
+	except:
+		pass
+	
+	healthy = [ns for ns in custom_dns_nameservers if nameserver_failures[ns] < 3]
+	pool = healthy if healthy else custom_dns_nameservers
+	
+	resolver_obj.nameservers = [random.choice(pool)]
 	resolver_obj.rotate = True
 	return True
 
@@ -180,10 +229,16 @@ def get_ns_record(name, string, retries=3):
 			raise e
 		except Exception as e:
 			last_exception = e
-			if 'solution lifetime expired' in str(e) or isinstance(e, (dns.exception.Timeout, dns.resolver.NoNameservers)):
+			reason = str(e)
+			is_transient = any([
+				isinstance(e, (dns.exception.Timeout, dns.resolver.NoNameservers, ConnectionRefusedError, OSError)),
+				'solution lifetime expired' in reason,
+				'SERVFAIL' in reason
+			])
+			if is_transient:
 				switch_dns_nameserver()
 				if attempt < retries - 1:
-					time.sleep(1)
+					time.sleep(0.5)
 					continue
 			raise e
 	if last_exception: raise last_exception
@@ -191,7 +246,10 @@ def get_ns_record(name, string, retries=3):
 
 def is_valid_syntax(email):
 	if len(email) > 254: return False, 'email too long (>254)'
-	user, host = email.split('@') if '@' in email else ('', '')
+	parts = email.split('@')
+	if len(parts) != 2:
+		return False, 'invalid format: multiple or missing @'
+	user, host = parts
 	if not user or not host: return False, 'invalid format'
 	if len(user) > 64: return False, 'local part too long (>64)'
 	if '..' in user or user.startswith('.') or user.endswith('.'): return False, 'invalid dots in local part'
@@ -199,6 +257,7 @@ def is_valid_syntax(email):
 	if not re.match(r'^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', host): return False, 'invalid domain format'
 	tld = host.split('.')[-1]
 	if len(tld) < 2 or tld.isdigit(): return False, 'invalid TLD'
+	if host.lower() in consumer_domains: return False, 'consumer email domain: ' + host
 	if re.search(disposable_domains, host.lower()): return False, 'disposable email domain'
 	return True, ''
 
@@ -227,32 +286,12 @@ def is_safe_host(email):
 	if re.search(dangerous_zones, host.lower()):
 		raise Exception('bad zone: '+host)
 	
-	# 2. MX & Wildcard Check
-	try:
-		# Check for wildcard MX by looking up a random subdomain
-		random_sub = ''.join(random.choices('abcdefghijklmnopqrstuvwxyz', k=10)) + '.' + host
-		if get_ns_record('mx', random_sub):
-			raise Exception('wildcard MX detected')
-	except: pass
+	# 2. MX Check
 
 	email_mx = get_ns_record('mx', host).lower()
 	if not email_mx:
 		raise Exception('no <mx> records found for: '+host)
 	
-	# 4. SPF Check
-	spf_found = False
-	txt_records = get_ns_record('txt', host)
-	for txt in txt_records:
-		if 'v=spf1' in txt:
-			spf_found = True
-			break
-	if not spf_found:
-		pass # We can flag it, but the prompt says "Domains without SPF are often parked" - usually we just want to know.
-		# For strictness, we'll just keep going unless it's a hard requirement to block.
-		# The prompt says: "Check SPF record exists... Domains without SPF are often parked or inactive"
-		# I'll treat it as a warning or rejection based on user's phrasing. 
-		# Let's keep it as a reason for now if we want to be strict.
-		# raise Exception('no SPF record found')
 
 	if selected_email_providers:
 		for domain in selected_email_providers.split(','):
@@ -281,12 +320,6 @@ def is_safe_host(email):
 	if re.search(dangerous_isps2, reversename):
 		raise Exception(reversename)
 	
-	email_mx_top_host = get_top_host(email_mx)
-	if email_mx_top_host != email_mx:
-		page_body = get_url_body(email_mx_top_host)
-		if re.findall(dangerous_title, page_body.lower()):
-			raise Exception('[!] '+email_mx_top_host+': '+first(re.findall(r'<title>([^<]+)<', page_body.lower())))
-	
 	return email_mx
 
 def is_safe_username(email):
@@ -301,12 +334,12 @@ def is_safe_email(email):
 	host = email.split('@')[-1]
 	try:
 		is_good_host = is_safe_host(email)
-		if mem_usage<80:
+		if mem_usage<95:
 			goods_cache[host] = is_good_host
 		is_good_user = is_safe_username(email)
 		return is_good_host
 	except Exception as e:
-		if not 'bad username' in str(e) and mem_usage<80:
+		if not 'bad username' in str(e) and mem_usage<95:
 			bads_cache[host] = str(e)
 		raise Exception(str(e))
 
@@ -330,7 +363,7 @@ def wc_count(filename, lines=0):
 def worker_item(jobs_que, results_que):
 	global min_threads, threads_counter, no_jobs_left, loop_times, goods, bads, progress, stats, categorization_lock
 	for lives in range(100):
-		if (mem_usage>90 or cpu_usage>90) and threads_counter>min_threads or jobs_que.empty() and no_jobs_left:
+		if (mem_usage>98 or cpu_usage>98) and threads_counter>min_threads or jobs_que.empty() and no_jobs_left:
 			break
 		if jobs_que.empty():
 			time.sleep(1)
@@ -391,7 +424,7 @@ def every_second():
 			net_usage = psutil.net_io_counters().bytes_sent - net_usage_old
 			net_usage_old += net_usage
 			loop_time = round(sum(loop_times)/len(loop_times), 2) if len(loop_times) else 0
-			if threads_counter<max_threads and mem_usage<80 and cpu_usage<80 and jobs_que.qsize():
+			if threads_counter<max_threads and mem_usage<95 and cpu_usage<95 and jobs_que.qsize():
 				threading.Thread(target=worker_item, args=(jobs_que, results_que), daemon=True).start()
 				threads_counter += 1
 		except:
@@ -515,7 +548,7 @@ speed = []
 total_lines = wc_count(list_filename)
 database = IP2Location.IP2Location(ip2location_path, 'SHARED_MEMORY')
 
-print(inf+'loading DNS servers...'+up)
+print(inf+'loading DNS servers...')
 load_dns_servers()
 print(inf+'source file:                   '+list_filename)
 print(inf+'total lines to procceed:       '+num(total_lines))
@@ -527,16 +560,26 @@ threading.Thread(target=every_second, daemon=True).start()
 threading.Thread(target=printer, args=(jobs_que, results_que), daemon=True).start()
 
 with open(list_filename, 'r', encoding='utf-8-sig', errors='ignore') as fp:
+	lines = [line.strip() for line in fp if line.strip()]
+	
+	def get_domain(line):
+		email = extract_email(line)
+		return email.split('@')[-1].lower() if email and '@' in email else ''
+	
+	lines.sort(key=get_domain)
+	
+	line_idx = 0
 	while True:
-		while not no_jobs_left and jobs_que.qsize()<min_threads*2:
-			line = fp.readline()
-			if not line:
+		while not no_jobs_left and jobs_que.qsize() < min_threads * 2:
+			if line_idx >= len(lines):
 				no_jobs_left = True
 				break
+			line = lines[line_idx]
 			if extract_email(line):
-				jobs_que.put(line.strip())
+				jobs_que.put(line)
 			else:
 				progress += 1
+			line_idx += 1
 		if threads_counter == 0 and no_jobs_left and not jobs_que.qsize():
 			break
 		time.sleep(0.08)
