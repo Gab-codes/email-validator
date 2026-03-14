@@ -507,8 +507,9 @@ class EmailValidatorApp:
 		if providers_text == 'e.g. google,microsoft - leave empty for all':
 			providers_text = ''
 
-		# Results folder
+		# Results folder and timestamp
 		self.results_path = os.path.join(os.path.dirname(os.path.abspath(fpath)), 'results')
+		self.run_timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 		os.makedirs(self.results_path, exist_ok=True)
 
 		self.btn_start.config(state='disabled')
@@ -539,14 +540,11 @@ class EmailValidatorApp:
 			self.ui_queue.put(('log_system', f'Loaded {self.total_lines:,} lines. Processing...'))
 
 			# Open output files
-			handles = {
-				'microsoft': open(os.path.join(self.results_path, 'microsoft.txt'), 'a', encoding='utf-8'),
-				'google': open(os.path.join(self.results_path, 'google.txt'), 'a', encoding='utf-8'),
-				'yahoo': open(os.path.join(self.results_path, 'yahoo.txt'), 'a', encoding='utf-8'),
-				'others': open(os.path.join(self.results_path, 'others.txt'), 'a', encoding='utf-8'),
-				'dangerous': open(os.path.join(self.results_path, 'dangerous.txt'), 'a', encoding='utf-8'),
-				'retry': open(os.path.join(self.results_path, 'retry.txt'), 'a', encoding='utf-8'),
-			}
+			handles = {}
+			for cat in ['microsoft', 'google', 'yahoo', 'others', 'dangerous', 'retry']:
+				cat_dir = os.path.join(self.results_path, cat)
+				os.makedirs(cat_dir, exist_ok=True)
+				handles[cat] = open(os.path.join(cat_dir, f'{self.run_timestamp}.txt'), 'a', encoding='utf-8')
 
 			# Process with thread pool
 			work_queue = queue.Queue()
@@ -674,7 +672,11 @@ class EmailValidatorApp:
 		duration = time.time() - self.time_start
 		with self.stats_lock:
 			avg_speed = self.stats['total'] / duration if duration > 0 else 0
-			report_path = os.path.join(self.results_path, '_report.txt')
+			
+			report_dir = os.path.join(self.results_path, 'reports')
+			os.makedirs(report_dir, exist_ok=True)
+			report_path = os.path.join(report_dir, f'report_{self.run_timestamp}.txt')
+			
 			with open(report_path, 'w', encoding='utf-8') as f:
 				f.write('Business Email Validator - Report\n')
 				f.write('=' * 40 + '\n')

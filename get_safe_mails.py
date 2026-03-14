@@ -437,7 +437,9 @@ def generate_report():
 	duration = end_time - time_start
 	avg_speed = stats['total'] / duration if duration > 0 else 0
 	
-	report_path = os.path.join(results_path, '_report.txt')
+	report_dir = os.path.join(results_path, 'reports')
+	if not os.path.exists(report_dir): os.makedirs(report_dir)
+	report_path = os.path.join(report_dir, f'report_{run_timestamp}.txt')
 	with open(report_path, 'w', encoding='utf-8') as f:
 		f.write(f"Validol - Email Validation Report\n")
 		f.write(f"=================================\n")
@@ -464,14 +466,11 @@ def generate_report():
 def printer(jobs_que, results_que):
 	global progress, total_lines, speed, loop_time, cpu_usage, mem_usage, net_usage, threads_counter, goods, bads, results_path
 	
-	file_handles = {
-		'microsoft': open(os.path.join(results_path, 'microsoft.txt'), 'a', encoding='utf-8'),
-		'google': open(os.path.join(results_path, 'google.txt'), 'a', encoding='utf-8'),
-		'yahoo': open(os.path.join(results_path, 'yahoo.txt'), 'a', encoding='utf-8'),
-		'others': open(os.path.join(results_path, 'others.txt'), 'a', encoding='utf-8'),
-		'dangerous': open(os.path.join(results_path, 'dangerous.txt'), 'a', encoding='utf-8'),
-		'retry': open(os.path.join(results_path, 'retry.txt'), 'a', encoding='utf-8')
-	}
+	file_handles = {}
+	for cat in ['microsoft', 'google', 'yahoo', 'others', 'dangerous', 'retry']:
+		cat_dir = os.path.join(results_path, cat)
+		if not os.path.exists(cat_dir): os.makedirs(cat_dir)
+		file_handles[cat] = open(os.path.join(cat_dir, f'{run_timestamp}.txt'), 'a', encoding='utf-8')
 	
 	try:
 		while True:
@@ -530,6 +529,7 @@ except:
 jobs_que = queue.Queue()
 results_que = queue.Queue()
 time_start = time.time()
+run_timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 bads = 0
 goods = 0
 progress = 0
