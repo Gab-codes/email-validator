@@ -1,0 +1,5 @@
+ip2location.bin
+domain_whitelist.txt
+emails_dangerous.txt
+emails_safe.txt
+emails.txt
