@@ -2,14 +2,14 @@
 
 import threading, sys, time, re, os, signal, queue, tempfile, random, datetime, collections
 try:
-	import psutil, requests, IP2Location, dns.resolver, dns.reversename, whois
+	import psutil, requests, IP2Location, dns.resolver, dns.reversename, dns.exception
 except ImportError:
 	print('\033[0;33minstalling missing packages...\033[0m')
 	if os.name == 'nt':
-		os.system(f'"{sys.executable}" -m pip install psutil requests dnspython IP2Location python-whois')
+		os.system(f'"{sys.executable}" -m pip install psutil requests dnspython IP2Location')
 	else:
-		os.system('apt -y install python3-pip; pip3 install psutil requests dnspython IP2Location python-whois')
-	import psutil, requests, IP2Location, dns.resolver, dns.reversename, whois
+		os.system('apt -y install python3-pip; pip3 install psutil requests dnspython IP2Location')
+	import psutil, requests, IP2Location, dns.resolver, dns.reversename, dns.exception
 
 if not sys.version_info[0] > 2 and not sys.version_info[1] > 8:
 	exit('\033[0;31mpython 3.9 is required. try to run this script with \033[1mpython3\033[0;31m instead of \033[1mpython\033[0m')
@@ -161,6 +161,7 @@ def switch_dns_nameserver():
 
 def get_ns_record(name, string, retries=3):
 	global resolver_obj, results_que
+	last_exception = None
 	for attempt in range(retries):
 		try:
 			if name == 'a':
@@ -175,13 +176,17 @@ def get_ns_record(name, string, retries=3):
 				return str(resolver_obj.resolve(string, 'mx')[0].exchange)[:-1]
 			if name == 'txt':
 				return [str(txt) for txt in resolver_obj.resolve(string, 'txt')]
+		except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
+			raise e
 		except Exception as e:
-			if 'solution lifetime expired' in str(e) or 'The DNS query name does not exist' not in str(e):
+			last_exception = e
+			if 'solution lifetime expired' in str(e) or isinstance(e, (dns.exception.Timeout, dns.resolver.NoNameservers)):
 				switch_dns_nameserver()
 				if attempt < retries - 1:
 					time.sleep(1)
 					continue
-			return ''
+			raise e
+	if last_exception: raise last_exception
 	return ''
 
 def is_valid_syntax(email):
@@ -222,17 +227,7 @@ def is_safe_host(email):
 	if re.search(dangerous_zones, host.lower()):
 		raise Exception('bad zone: '+host)
 	
-	# 2. WHOIS Age Check
-	try:
-		domain_info = whois.whois(host)
-		creation_date = domain_info.creation_date
-		if isinstance(creation_date, list): creation_date = creation_date[0]
-		if creation_date and (datetime.datetime.now() - creation_date).days < 30:
-			raise Exception('recently registered domain (<30 days)')
-	except:
-		pass # WHOIS failures shouldn't necessarily kill the check
-
-	# 3. MX & Wildcard Check
+	# 2. MX & Wildcard Check
 	try:
 		# Check for wildcard MX by looking up a random subdomain
 		random_sub = ''.join(random.choices('abcdefghijklmnopqrstuvwxyz', k=10)) + '.' + host
@@ -358,8 +353,11 @@ def worker_item(jobs_que, results_que):
 				reason = str(e)
 				email = extract_email(line) or 'unknown'
 				host = email.split('@')[-1].lower() if '@' in email else 'unknown'
-				if 'no <mx> records' in reason or 'no <a> record' in reason:
-					# Potential transient DNS failure
+				
+				transient_errors = (dns.exception.Timeout, dns.resolver.NoNameservers, requests.exceptions.ConnectionError)
+				is_transient = isinstance(e, transient_errors) or 'solution lifetime expired' in reason or 'network unreachable' in reason.lower()
+				
+				if is_transient:
 					results_que.put((False, line, 'retry'))
 					with categorization_lock:
 						stats['total'] += 1
